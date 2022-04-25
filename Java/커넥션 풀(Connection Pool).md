@@ -6,8 +6,7 @@
     - 사용자가 DB를 사용하기 위해 connection 객체를 요청한다.
     - connection pool에서 사용되고 있지 않은 connection 객체를 제공한다.
     - 사용자가 connection객체를 사용 완료하면 pool에 반환한다.
-        
-       https://www.notion.so/Connection-Pool-da9067439bb847b7abee2a249316c6ed#9f78048832f34cd4bae372417458bd95
+        ![image](https://user-images.githubusercontent.com/73684562/165069841-c8d00d0f-03b3-46e8-8c84-9e6cad6b217c.png)
         
         ```java
         Connection conn = null;
