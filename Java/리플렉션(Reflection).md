@@ -12,7 +12,7 @@
     public class Main{
     	public static void main(String[] args){
     		Object foo = new Foo();
-    		foo.getFoo() //컴파일에러
+    		foo.getFoo();//컴파일에러
     	}
     }
     ```
