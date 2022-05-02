@@ -23,7 +23,7 @@
 
 ## 4. 서블릿 컨테이너(톰캣..)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bcf48195-cfc1-4b68-a220-10080d30bfa3/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/166254177-a39ec6bb-9d27-4a6d-aaeb-d3c63c011906.png)
 
 - 서블릿들을 관리하는 공간
 - 웹서버와의 통신 지원
@@ -34,7 +34,7 @@
 
 ## 5. 동작 원리
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5a30ac62-36ba-4ca5-806c-4ac2d75ccb28/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/166254211-cf6ce70b-2629-4384-8ff7-127993d52d96.png)
 
 - 클라가 서버에 요청
 - 웹에서 정적인 콘텐츠를 처리하고 동적인 콘텐츠는 컨테이너로 전달
@@ -54,11 +54,9 @@ Servlet - 자바 소스 내 html
 
 ---
 
----
-
 ## 1. 스프링 컨텍스트(Application Context)?
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8d0206f7-bb43-4e3b-9524-047604b91a61/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/166254275-d8a21bdd-c494-46b2-b197-045622924af6.png)
 
 - 컨테이너에서 하는 빈의 생성과 관계설정 외에 추가적인 기능을 하는 인터페이스
 - 여러 서블릿에서 공통으로 사용할 빈을 등록하는 contextdlek.
@@ -74,7 +72,7 @@ Servlet - 자바 소스 내 html
 
 ## 3. 동작 원리
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c3740786-fa61-4793-ab91-77f3654ffe45/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/166254320-9f8a16dc-839e-4f39-88bf-6d66f7fa6b64.png)
 
 - 컨텍스트는 @Configuration이 붙은 클래스들을 설정 정보에 기록해 주고 @Bean이 붙은 메소드의 이름으로 bean목록을 생성한다.
 - 클라이언트가 해당 bean을 요청한다
@@ -83,14 +81,14 @@ Servlet - 자바 소스 내 html
 
 ## 4. 구조
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/da625eb2-64b0-463b-a3c3-7f79961114ab/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/166254372-9fdfff08-8c34-45d5-b939-47bcf19bf4c6.png)
 
 - 빈을 생성하는 BeanFactory 최상위 인터페이스를 상속받음
 - BeanFactory는 1개의 빈을 찾기 위한 메소드를 가지고 있음
 - ApplicationContext는 BeanFactory직속으로 상속받지않고 중간에 ListableBeanFactory, HierarchicalBeanFactory를 상속받기 때문에 bean리스트 처리, 계층관계 설정하는 기능을 가지고 있다.
 - ApplicationContext의 인터페이스로 AutowireCapableBeanFactory를 가지고 있어서 DI를 처리할 수 있다. (@Autowired 처리)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a3585e5b-dadd-47e4-b4bf-b6071c6ad80f/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/166254426-36998854-1c64-4cfd-9a4f-9343cf4f99fc.png)
 
 - ContextLoaderListener를 이용하여 root-context를, DispatcherServlet를 이용하여 servlet-context를 생성
 - Root-Context
