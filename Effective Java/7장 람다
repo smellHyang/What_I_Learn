@@ -1,0 +1,381 @@
+---
+
+## 1. 익명클래스보다는 람다를 사용하라
+
+- 함수형 인터페이스(Functional Interface)
+    - 추상 메소드를 하나만 담은 인터페이스
+- 익명 클래스 방식은 코드가 너무 길기 때문에 자바는 함수형 프로그래밍에 적합하지 않았다.
+- 자바8에서 함수형 인터페이스들의 인스턴스들을 람다식을 사용해 만들수 있게 되었다.
+
+### 1-1. 람다식(함수형 인터페이스)
+
+```java
+//익명클래스의 인스턴스를 함수 객체로 사용
+Collections.sort(words, new Comparator<String>(){
+	public int compare(String s1, String s2) {
+		return Interger.compare(s1.length(), s2.length());
+	}
+});
+
+//람다식을 함수 객체로 사용
+Collections.sort(words, (s1,s2) -> Integer.compare(s1.length(), s2.length()));
+```
+
+- 컴파일러가 문맥을 살펴 타입을 추론해준다.
+    - 타입을 명시해야 코드가 명확할때만 제외하고는, 람다의 모든 `매개변수 타입은 생략한다`. → 컴파일러가 오류를 내뱉을때만 해당타입 명시.
+
+### 1-2.열거타입의 인스턴스 필드를 이용하는 방식으로 상수 별로 다르게 동작하는 코드를 쉽게 구현할 수 있다.
+
+```java
+//기존 열거타입
+public enum Operation{
+	PLUS("+"){
+		public double apply(double x, double y) {return x+y;}
+	}, ...
+}
+
+//람다
+public enum Operation {
+    PLUS  ("+", (x, y) -> x + y),
+    MINUS ("-", (x, y) -> x - y),
+    TIMES ("*", (x, y) -> x * y),
+    DIVIDE("/", (x, y) -> x / y);
+.
+.
+.
+}
+```
+
+- 람다는 이름이 없고 문서화도 못한다. 따라서 코드 자체로 동작이 명확히 설명되지 않거나 코드 줄 수 가 많아지만 람다를 지양해야한다.
+
+### 1-3. 람다의 시대지만 익명클래스를 써야만 하는 이유
+
+1) 추상 클래스의 인스턴스를 만들때 
+
+2) 추상메소드가 여러개인 인터페이스를 만들때
+
+3) 함수 객체가 자신을 참조해야할때 
+
+- 람다에서의 this는 바깥 인스턴스를 가리킨다.
+- 익명클래스에서 this는 익명클래스의 인스턴스 자신을 가리킨다.
+
+### 1.4 람다를 직렬화하는것은 극히 삼가라(익명클래스도 마찬가지)
+
+- 직렬화 형태가 구현별로 다를수 있다.
+- 직렬화 해야하는 함수 객체가 있다면 private정적 중첩클래스를 사용하자
+
+---
+
+## 2. 람다보다는 메소드 참조를 사용하라
+
+### 2-1. 람다의 특징
+
+- 람다의 가장 큰 특징은 `간결함`.
+- 더 간결하게 만드는 방법은 `메소드 참조`이다.
+
+```java
+//람다
+map.merge(key, 1, (count,incr) -> count + incr);
+
+//메소드 참조
+map.merge(key, 1, Integer::sum);
+```
+
+→ 매개변수가 늘어날수록 메소드 참조로 제거 할 수 있는 코드양도 늘어난다.
+
+### 2-2. 메소드 참조
+
+- 메소드 참조는 람다의 간단명료한 대안이 될수 있다. 하지만 메소드 참조 쪽이 짧고 명확하다면 메소드 참조를 쓰고 그렇지 않다면 람다를 써라.
+    
+    ```java
+    //메소드 참조
+    	service.execute(GoshThisClassNameIsHumongous::action);
+    
+    //람다
+    service.execute(() -> action());
+    ```
+    
+    - 람다로 할수 없는 일이면 메소드 참조로도 할 수 없다.
+    - 람다는 코드의 재사용성 안된다.
+
+---
+
+## 3. 표준 함수형 인터페이스를 사용하라
+
+### 3-1. 주의사항
+
+- 필요한 용도에 맞는게 있다면, 직접 구현하지 말고 표준 함수형 인터페이스를 활용하라
+    
+    ```java
+    //표준함수형 인터페이스
+    protected boolean removeEldestEntry(Map.Entry<K,V> eldest){
+    	return size() > 100;
+    }
+    
+    //직접만든 함수형 인터페이스
+    @FunctionalInterface interface EldestEntryRemovalFuntion<K,V>{
+    	boolean remove(Map<K,V> map, Map.Entry<K,V> eldest);
+    }
+    ```
+    
+    - java.util.function 패키지를 보면 다양한 용도의 표준 함수형 인터페이스가 담겨있다.
+    
+- 기본함수형 인터페이스에 박싱된 기본타입을 넣어 사용하지는말자
+    - 표준 함수형 인터페이스 대부분은 기본타입만 지원한다. 하지만 계산량이 많을때는 성능저하를 불러올수 있다.
+    
+- 표준 인터페이스 중 필요한 용도에 맞는게 없다면 `직접` 작성해야한다.
+    - 하지만 이중 하나이 이상을 만족한다면 전용 함수형 인터페이스 구현을 고민해보자
+        
+        1) 자주쓰이며, 이름자체가 용도를 명확히 설명해준다 (e.g. Comparator)
+        
+        2) 반드시 따라야하는 규약이있다.
+        
+        3) 유용한 디폴트 메소드를 제공 할 수 있다.
+        
+- 직접 만든 함수형 인터페이스에는 항상 `@FuntionalInterface` 애노테이션을 사용하라
+    - 해당 클래스의 코드나 설명 문서를 읽을 이에게 이 인터페이스가 람다용으로 설계된 것임을 알려준다.
+    - 해당 인터페이스가 추상 메소드를 오직 하나만 가지고 있어야 컴파일 되게 해준다
+    - 유지보수 과정에서 누군가 실수로 메소드를 추가하지 못하게 막아준다.
+    
+- 서로 다른 함수형 인터페이스를 같은 위치의 인수로 받는 메소드들을 다중정의해서는 안된다.
+    - 클라이언트에게 불필요한 모호함을 안겨주고 문제를 발생시킨다.
+    - e.g. ExceutorService의 submit()메소드는 Collable<T>를 받는것과 Runnable을 받는 것을 다중정의했다. 이때문에 형변환해야할때가 생긴다.
+
+---
+
+## 4. 스트림은 주의해서 사용하라
+
+### 4-1. API개념
+
+- 스트림 ? 데이터 원소의 유한 혹은 무한 `시퀀스`를 뜻한다.
+    
+    <aside>
+    💡 데이터 원소? 객체 참조, 기본타입 값(int, long, double)
+    
+    </aside>
+    
+- 스트림 파이프라인 ? 스트림의 원소들로 수행하는 `연산단계`
+    
+    <aside>
+    💡 스트림 원소? 컬렉션, 배열, 파일, 정규표현식 패턴 매쳐(matcher), 난수 생성기, 다른 스트림
+    
+    </aside>
+    
+- 스트림 파이프라인
+    - 소스 스트림 → (중간 연산) → 종단연산
+    - 중간연산 : 스트림을 어떠한 방식으로 변환
+        - 각 원소에 함수를 적용하거나 특정조건을 만족 못하는 원소를 걸러낼 수 있다.
+        - 한 스트림을 다른 스트림으로 변환하는데, 변환된 스트림의 원소타입은 변환 전 스트림의 원소타입과 같은수도, 다를수도있다.
+    - 종단 연산 : 마지막 중간 연산이 내놓은 스트림에 최후의 연산을 가한다.
+        - 원소를 정렬해 컬렉션에 담거나, 특정원소 하나를 선택하거나 모든 원소를 출력하는 형태
+    - 지연평가(lazy evaluation)
+        - 평가는 종단 연산이 호출될 때 이뤄지고, 종단 연산에 쓰이지 않는 데이터 원소는 계산에 쓰이지 않는다. → 무한 스트림(종단이 없으면 no-op)
+    - 순차적 진행
+    - 병렬 실행 시 parallel메소드 호출 but 효과를 볼수 있는 상황은 많지않다.ㅏ
+    
+- 스트림 API
+    - 메소드 연쇄를 지원하는 `플루언트 API`(fluent API) → 파이프 라인 여러개를 연결해 표현식 하나로 만들 수 있다.(순차적 진행)
+    
+
+### 4-2. 스트림 사용시 주의사항
+
+- 제대로 사용하면 프로그램이 간결하고 깔끔해지지만, 잘못사용하면 읽기 어렵고 유지보수가 힘들다.
+    - 람다에서는 타입이름을 자주 생량하므로 `매개변수이름을 잘지어야` 스트림 파이프라인의 가독성이 유지된다. → 도우미 메소드를 적절히 활용하는 일의 중요성은 일반 반복코드에서 보다는 스트림 파이프라인에서 훨씬크다.
+    - char값을 처리할 때는 스트림을 삼가라
+    
+    ```java
+    "Hello world".char().forEach(System.out::print);
+    
+    //결과
+    //7210110810811132119.....
+    //스트림 원소는 int이기 때문에
+    ```
+    
+
+- 기존 코드는 스트림을 사용하도록 리팩터링하되, 새코드가 더 나아 보일때만 반영하라(스트림과 반복문 적절히..)
+    - 코드블록
+        - 범위안의 지역변수를 일고 수정할 수 있다.
+        - return, break, continue문을 통해 블록을 종료하거나 건너 뛸 수 있다.
+        - 메소드 선언에 명시된 검사 예외를 던질 수 있다.
+    - 람다
+        - final이거나 final 변수만 읽을수 있고 지역변수를 수정하는건 불가능
+        - 중간에 메소드 및 블록 종료, 건너뜀, 예외 안됨
+        
+- 스트림에 사용하기 좋은 예시
+    - 원소들의 시퀀스를 `일관`되게 변환한다.
+    - 원소들의 시퀀스를 `필터링`한다.
+    - 하나의 연산을 사용해 `결합`한다(더하기, 연결하기, 최솟값 구하기 등)
+    - `컬렉션`에 모은다(공통된 속성)
+    - `특정조건`을 만족하는 원소를 찾는다.
+    
+- 스트림 사용 부적절
+    - 한 데이터가 파이프 라인의 여러단계를 통과할때, 이 데이터의 각 단계에서의 값들이 `동시에 접근하기 어려운` 경우 → 파이프라인은 한값을 다른값에 매핑하고나면 원래의 값을 잃기 때문
+        
+        ```java
+        public class MersennePrimes {
+            static Stream<BigInteger> primes() {
+                return Stream.iterate(TWO, BigInteger::nextProbablePrime);
+            }
+        
+            public static void main(String[] args) {
+                primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
+                        .filter(mersenne -> mersenne.isProbablePrime(50))
+                        .limit(20)
+                        .forEach(mp -> System.out.println(mp.bitLength() + ": " + mp));
+            }
+        }
+        ```
+        
+        → 각 메르센 소수의 앞에 지수(p)를 출력한다고 했을때 이 값은 초기스트림에만 나타나므로 종단연산에서는 접근 할수 없다. 
+        
+
+---
+
+## 5. 스트림에서는 부작용 없는 함수를 사용하라
+
+### 5-1. 스트림의 핵심
+
+- 일련의 변환(transformation)으로 재구성하는 부분
+- 각 변환단계는 가능한 한 이전 단계의 결과를 받아 처리하는 순수함수여야 한다.
+- 다른 가변상태를 참조하지 않고, 함수 스스로도 다른상태를 변경하지 않는다.
+    
+    ```java
+    Map<String, Long> freq = new HashMap<>();
+    //스트림 패러다임을 이해하지 못한 API
+    //        try (Stream<String> words = new Scanner(file).tokens()) {
+    //            words.forEach(word -> {
+    //                freq.merge(word.toLowerCase(), 1L, Long::sum);
+    //            });
+    //        }
+    ```
+    
+    → 모든작업이 종단연산인 forEach에서 일어난다. (나쁜예)
+    
+    → forEach연산은 스트림 계산 결과를 보고용, 계산XX
+    
+    ```java
+    Map<String, Long> freq;
+            try (Stream<String> words = new Scanner(file).tokens()) {
+                freq = words
+                        .collect(groupingBy(String::toLowerCase, counting()));
+            }
+    
+            System.out.println(freq);
+    ```
+    
+    → 짧고 명확
+    
+
+### 5-2. Collectors
+
+- 스트립의 원소를 객체 하나에 취합한다.
+- Collector가 생성하는 객체는 주로 컬렉션
+    - toList(), toSet(), toCollection(collectionFactory)
+- toMap(keyMapper, valueMapper)
+    - 스트림 원소를 키, 값에 매핑하는 함수를 인수로 받는다.
+    - 병합(merge) 함수 제공
+- groupingBy
+    - 입력 : 분류함수
+    - 출력 : 원소들을 카테고리별로 모아놓은 맵을 담은 collect
+    - 분류함수와 함께 다운스트림 collect도 명시
+    - 맵 팩터링 지정
+- minBy, maxBy
+    - 인수를 이용해 스트림에서 값이 가장 작은, 큰 값을 반환
+- Joining
+    - CharSequence 스트림에만 적용가능
+    
+
+---
+
+## 6. 반환타입으로는 스트림보다 컬렉션이 낫다.
+
+- 원소 시퀀스를 반환할때는 스트림을 사용해야한다.
+
+<aside>
+💡 원소 시퀀스? 일련의 원소를 반환하는 메소드
+
+</aside>
+
+- 스트림을 반복을 지원하지 않는다.( 스트림은 Iterable 확장 x)
+- 사용자가 반복 또는 시퀀스로 처리하고 싶을때
+
+### 6-1 컬렉션으로 반환
+
+- Stream<E> -> Iterable<E>
+
+```java
+//스트림 파이프라인에서만 쓰일때 
+public static <E> Iterable<E> iterableOf(Stream<E> stream){
+	return stream::iterator;
+}
+```
+
+- 원소 시퀀스를 반환하는 공개 api 반환 타입에는 컬렉션이나 하위타입 사용
+- 시퀀스의 크기가 작으면 표준 컬렉션 반환(메모리 공간차지에 따라)
+
+### 6-2. 스트림으로 반환
+
+- Iterable<E> -> Stream<E>
+
+```java
+//반복문에서만 쓰일때 
+public static <E> Stream<E> streamOf(Iterable<E> iterable){
+	return StreamSupport.stream(iterable.spliterator(),false);
+}
+```
+
+- AbstractCollection에서 contains와 size() 구현이 불가능 하면 스트림이나 Iterable 반환
+
+### 6-3. 요약
+
+- 원소 시퀀소 반환 메소드 생성 시, 스트림 또는 반복으로 처리 가능
+- 원소들이 컬렉션에서 관리되거나 원소의 개수가 적으면 표준 컬렉션 사용(IF NOT → 전용 컬렉션 고려)
+- 컬렉션 반환 불가능 → 스트림 or Iterable
+
+---
+
+## 7. 스트림 병렬화는 주의해서 적용하라
+
+### 7-1. 자바의 병렬화
+
+- 자바5 → concorrent, Executor
+- 자바7 → 고성능 병렬 분해(parallel decom-position)프레임워크의 fork-join패키지 추가
+- 자바8 → 스트림의 parallel 메소드(파이프라인 병렬화)
+
+### 7-2. 스트림의 병렬화 Bad Case👎
+
+- 데이터 소스가 Stream.iterate
+- 중간연산으로 limit 사용 시
+
+→ 확실하지 않으면 스트림 파이프라인 병렬화 XX
+
+### 7-3. 스트림의 병렬화 Good Case👍
+
+- 스트림 소스가 Arraylist, HashMap, HashSet, ConcurrentHashMap의 인스턴스
+- 배열, int, long 범위
+    - 데이터를 원하는 크기로 손쉽게 나눌수 있다
+    - 다수의 스레드에 분배하기 좋다.
+    - Spliterator가 담당(Stream이나 Iterable의 메소드)
+    - 참조 지역성이 good
+    
+    <aside>
+    💡 참조 지역성? 이웃한 원소의 참조들이 메모리에 연속해서 저장되어 있는것 (배열 BEST)
+    
+    </aside>
+    
+- Stream, Iterable, Collection의 병렬화
+    - spliterator 메소드를 재정의
+    - 결과 스트림의 병렬화 성능을 강도 높이 테스트
+    
+
+### 7-4. 종단연산의 병렬수행
+
+- 축소(reduction) - 적합
+- 가변 축소(mutable reduction) - 적합xx (합치는 부담 oo)
+
+### 7-5. 요약
+
+- 확신 없이는 스트림 파이프라인 병렬화 XX
+- 명세대로 객체를 사용해야한다.
+- 변경 전후로 운영과 비슷한 시스템에서 성능테스트 필요
+- 조건이 잘 갖춰지면 성능향상 가능
