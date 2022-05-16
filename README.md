@@ -5,3 +5,4 @@ Daily Study for consistent growth is essential
 - Java
 - Spring
 - CS
+- Web
