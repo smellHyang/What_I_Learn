@@ -43,3 +43,10 @@
 ### Serializable Read
 
 - 트랜잭션 내에서 쿼리를 두번 이상 수행할 때, 첫번째 쿼리에 있던 레코드가 사라지거나 값이 바뀌지 않고 새로운 레코드가 나타나지 않도록 설정
+
+| 해결가능성 |  Dirty Read | Non-Repeatable Read |  Phantom Read |  |
+| --- | --- | --- | --- | --- |
+| Read Uncommitted | X | X | X | shared Lock(X) |
+| Read Committed | O | X | X | Shared Lock(O) |
+| Repeatable Read | O | O | X | read동안 update/delete(X) |
+| Serializable Read | O | O | O | read동안 insert(X) |
