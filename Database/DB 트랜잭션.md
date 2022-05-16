@@ -31,7 +31,7 @@
 
 ## 5. 상태
 
-![Uploading image.png…]()
+![image](https://user-images.githubusercontent.com/73684562/168645321-2aa30e95-9aa4-4930-bed9-43cb76d16a8b.png)
 
 - 활동(Active) : 트랜잭션이 실행 중
 - 실패(Failed) : 트랜잭션 실행 중 오류 발생으로 중단
