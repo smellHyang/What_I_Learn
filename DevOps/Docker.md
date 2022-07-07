@@ -49,7 +49,7 @@
 
 - 컨테이너를 삭제하는건 컨테이너에 생성된 데이터가 모두 사라진다는 것
 - 따라서 삭제시 유지해야하는 데이터는 컨테이너 외부스토리지에 저장 (s3, data volumes..)
----
+[---
 # before
 docker run -d -p 3306:3306 \
   -e MYSQL_ALLOW_EMPTY_PASSWORD=true \
@@ -62,4 +62,4 @@ docker run -d -p 3306:3306 \
   --name mysql \
   -v /my/own/datadir:/var/lib/mysql \ # <- volume mount
   mysql:5.7
----
+---](https://www.notion.so/flab-kein/Docker-f46dfce1d033460c97c37c4054e60592#20d2f01fa8674665854303b9e6e4b653)
