@@ -22,11 +22,16 @@
 
 - 사용자 id, pw를 입력하여 로그인 요청
 - 서버는 회원db에 들어가 있는 사용자 인지 확인
-- 확인이 되면 서버는 로그인 요청 확인 후 secret key를 통해 토큰 발급
-- 이를 client에 전달
-- 서비스 요청과 권한을 확인하기 위해 헤더에 데이터(JWT) 요청
+- 확인이 되면 서버는 로그인 요청 확인 후 secret key를 통해 토큰 발급(각각 base64로 인코딩)하고 이를 client에 전달
+    - +) RSA의 경우 header(RSA) + payload(username..)으로 구성되고 서버가 개인키로 시크니쳐를 만들고 client에 보낸다.
+- client는 서비스 요청과 권한을 확인하기 위해 헤더에 데이터(JWT) 요청
+    - 로컬스토리지JWT를 담고 이와 함께 개인정보를 달라고 server에 다시 전달
 - 데이터를 확인하고 JWT에서 사용자 정보 확인
+    - +) RSA의 경우 서버는 공개키로 서명 검증
+    - signiture에 header + payload + cors(HS256)을 담아 보내는데
+    - server가 가진 cors로 client가 보낸 JWT를 디코딩하여 값이 맞으면 인증
 - Client요청에 대한 응답과 요청한 데이터를 전달
+    - payload정보 기반으로 해당 정보를 db에서 select하여 응답
 
 ## 4. JWT 단점
 
