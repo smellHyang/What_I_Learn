@@ -7,7 +7,7 @@
 - 메모리에 한번 할당되어 프로그램 종료 시까지 그대로 존재
 - 모든 객체가 메모리를 공유한다.
 
-[https://s3.us-west-2.amazonaws.com/secure.notion-static.com/8786a918-7349-49a5-83a0-8e2b1fa4ec6b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220722%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220722T090110Z&X-Amz-Expires=86400&X-Amz-Signature=b66ed9fe16393aa1fe7f3f823dee1afdc6dd54bd22de6eb5850c86480cc464a7&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject]
+![image](https://user-images.githubusercontent.com/73684562/180404485-bcc37610-47f9-460b-9dbe-97129a1c3601.png)
 
 ## 3. 사용
 
