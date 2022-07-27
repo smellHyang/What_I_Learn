@@ -17,12 +17,12 @@
 
 ## 3. 아키텍쳐
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0dd93b6a-b4f6-41ad-b1e8-0b66f9fb6bc1/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/181252556-f775ab17-9d3d-4542-9649-9726949b1820.png)
 
 - JDBC만 사용하는 어플리케이션은 Application Modules에서 JDBC Interfaces 를바로 호출하지만 JDBC API를 감싸서 개발자가 조금 더 편리하게 접근할 수 있도록 해준다.
 
 ## 4. 데이터 액세스
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0bd0bb83-5371-487d-9491-a5f681ec2a18/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/181252496-413ce8a1-6ebd-4a8a-84da-c9b06096c3e2.png)
 
 - Controller → Service → DAO → Mybatis
