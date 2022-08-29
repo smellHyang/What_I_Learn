@@ -1,4 +1,4 @@
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0cea4bae-fa37-4993-9731-b134c3c3a2c2/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/187216702-ce6592c2-1fcd-4478-b523-a4fe41c4cd3f.png)
 
 ## 사전 개념
 
@@ -13,7 +13,7 @@
 
 ### 멀티쓰레드 객체 공유와 상태제어
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/65f8ef09-da78-4167-9bf3-9c607669df03/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/187216671-973d2833-1abc-4604-a6f3-e176e9a95d96.png)
 
 | 동시성(concurrency) | 병렬성(parallelism) |
 | --- | --- |
@@ -25,7 +25,7 @@
 
 ## Visibility(가시성)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/30c588f3-020b-4e3a-8e46-1d59e23f0b34/Untitled.png)
+![image](https://user-images.githubusercontent.com/73684562/187216646-dd14d7c2-cb7e-4ef3-a7c3-45d7127099bb.png)
 
 - 멀티스레드 환경에서 스케쥴링에 의해 cpu core에서 쓰레드를 담당하게 된다.
 - 이때 메인 메모리에서 값을 읽어 연산하는것이 아닌 Cpu에 존재하는 Cache에 옮겨놓고 연산을 한다. (main memory에서 값을 읽어오기엔 overhead가 생기므로 cache를 두어 성능향상 목적)
